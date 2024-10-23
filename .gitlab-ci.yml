@@ -1,0 +1,29 @@
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  image: python:latest
+  stage: test
+  script:
+    - pip install -r requirements.txt
+    - python manage.py test --noinput
+
+build_docker_image:
+  stage: build
+  script:
+    - docker-compose stop
+    - docker-compose rm -f
+    - docker-compose up -d
+
+
+#deploy_stage:
+#    stage: deploy
+#    script:
+#        - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN 88.99.102.103.nip.io:4567
+#        - docker pull 88.99.102.103.nip.io:4567/root/test_project
+#        - docker stop web || true && docker rm web || true
+#        - docker run --name=web -p 8050:80 -itd 88.99.102.103.nip.io:4567/root/test
+#    tags:
+#        - stage
